@@ -1,0 +1,20 @@
+<h3>Enter the following details:-</h3><br>
+
+<form role="form" method="GET">
+  <div class="form-group">
+    <label  class= "bg-primary">Name</label>
+    <input type="text" class="form-control" ng-model="bname" placeholder="Enter name of the book">
+  </div>
+  <div class="form-group">
+    <label  class= "bg-primary">Author</label>
+    <input type="text" class="form-control" ng-model="bauthor" placeholder="Enter the authors name">
+  </div>
+   <div class="form-group">
+    <label  class= "bg-primary">Description</label>
+     <textarea class="form-control" rows="5" ng-model="bdescription" placeholder="Enter book description"></textarea>
+  </div> 
+  
+  <button type="submit">submit</button>
+</form>
+
+{{successMessage}}

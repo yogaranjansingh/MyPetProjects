@@ -1,0 +1,107 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building JMH 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ JMH ---
+[INFO] Deleting /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ JMH ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ JMH ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ JMH ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ JMH ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ JMH ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ JMH ---
+[INFO] Building jar: /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/target/JMH-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ JMH ---
+[INFO] Installing /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/target/JMH-0.0.1-SNAPSHOT.jar to /Users/ysingh1/.m2/repository/JMH/JMH/0.0.1-SNAPSHOT/JMH-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/ysingh1/Documents/Personal/MyGithub/MyLatestWork/JMH/pom.xml to /Users/ysingh1/.m2/repository/JMH/JMH/0.0.1-SNAPSHOT/JMH-0.0.1-SNAPSHOT.pom
+[INFO] 
+[INFO] --- exec-maven-plugin:1.4.0:exec (default-cli) @ JMH ---
+# JMH 1.10.3 (released 1039 days ago, please consider updating!)
+# VM version: JDK 1.8.0_101, VM 25.101-b13
+# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/bin/java
+# VM options: <none>
+# Warmup: 20 iterations, 1 s each
+# Measurement: 20 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: JMH.JMH.JMHHelloWorld.helloWorld
+
+# Run progress: 0.00% complete, ETA 00:00:40
+# Fork: 1 of 1
+# Warmup Iteration   1: 3661976013.918 ops/s
+# Warmup Iteration   2: 3570195246.462 ops/s
+# Warmup Iteration   3: 3647426760.345 ops/s
+# Warmup Iteration   4: 3601255975.083 ops/s
+# Warmup Iteration   5: 3549496204.721 ops/s
+# Warmup Iteration   6: 3482267596.499 ops/s
+# Warmup Iteration   7: 3565105010.935 ops/s
+# Warmup Iteration   8: 3529488263.166 ops/s
+# Warmup Iteration   9: 3530571101.675 ops/s
+# Warmup Iteration  10: 3369982749.103 ops/s
+# Warmup Iteration  11: 3361459512.161 ops/s
+# Warmup Iteration  12: 3367109001.690 ops/s
+# Warmup Iteration  13: 3333580053.095 ops/s
+# Warmup Iteration  14: 3509179720.372 ops/s
+# Warmup Iteration  15: 3578612066.960 ops/s
+# Warmup Iteration  16: 3474574166.726 ops/s
+# Warmup Iteration  17: 3327649026.981 ops/s
+# Warmup Iteration  18: 3319705931.112 ops/s
+# Warmup Iteration  19: 3306921633.265 ops/s
+# Warmup Iteration  20: 3351985934.886 ops/s
+Iteration   1: 3398948093.842 ops/s
+Iteration   2: 3329735764.006 ops/s
+Iteration   3: 3337815366.010 ops/s
+Iteration   4: 3270660207.988 ops/s
+Iteration   5: 3414577589.875 ops/s
+Iteration   6: 3318795226.184 ops/s
+Iteration   7: 3351353826.630 ops/s
+Iteration   8: 3408459506.413 ops/s
+Iteration   9: 3421331765.805 ops/s
+Iteration  10: 3215091771.999 ops/s
+Iteration  11: 2522764974.438 ops/s
+Iteration  12: 3334433941.485 ops/s
+Iteration  13: 3099965817.513 ops/s
+Iteration  14: 3238512219.900 ops/s
+Iteration  15: 3306957973.546 ops/s
+Iteration  16: 3347277089.661 ops/s
+Iteration  17: 3281960555.189 ops/s
+Iteration  18: 3306236172.251 ops/s
+Iteration  19: 3289873934.682 ops/s
+Iteration  20: 3237047530.682 ops/s
+
+
+Result "helloWorld":
+  3271589966.405 ±(99.9%) 166963127.788 ops/s [Average]
+  (min, avg, max) = (2522764974.438, 3271589966.405, 3421331765.805), stdev = 192274986.257
+  CI (99.9%): [3104626838.617, 3438553094.193] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:00:40
+
+Benchmark                          Mode  Cnt           Score           Error  Units
+JMH.JMH.JMHHelloWorld.helloWorld  thrpt   20  3271589966.405 ± 166963127.788  ops/s
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 42.846 s
+[INFO] Finished at: 2018-05-21T15:21:53+05:30
+[INFO] Final Memory: 20M/312M
+[INFO] ------------------------------------------------------------------------

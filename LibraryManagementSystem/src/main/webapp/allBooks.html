@@ -1,0 +1,53 @@
+
+<center>
+
+<div class="form-group" style = "margin-right:100px">
+ <label for="usr"><h3>Filter your results</h3></label>
+<input type= "text" ng-model= "keyword" class = "class="form-control bg-info" placeholder = "enter the bookname or part of name" class= "bg-info">
+</div>
+</center>
+
+<div class="container">
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name of Book</th>
+        <th>Author</th>
+        <th>Description</th>
+        <th>No of books available</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+    
+      <tr dir-Paginate = "book in libraryBooks | filter:keyword|itemsPerPage:5">
+        <td class= "bg-info">{{book.id}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.description}}</td>
+        <td>{{book.count}}</td>
+        <td><button ng-click = "removeBook(book.id)" ng-show = "admin" class = "btn-danger">remove</button></td>
+        <td><button ng-click = "issueBook(book.id)"   class = "btn-success">issue</button></td>
+        <td><button ng-click = "returnBook(book.id)" ng-show = "admin"  class = "btn-info">return</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+
+<center>
+
+<!-- <dir-pagination-controls boundary-links="true"
+	on-page-change="pageChangeHandler(newPageNumber)"
+	template-url="dirPagination.tpl.html"></dir-pagination-controls> -->
+	
+	<dir-pagination-controls
+        max-size="6"
+        direction-links="true"
+        boundary-links="true" >
+    </dir-pagination-controls>
+
+</center>
