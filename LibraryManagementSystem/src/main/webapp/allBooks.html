@@ -12,22 +12,32 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Name of Book</th>
-        <th>Author</th>
-        <th>Description</th>
-        <th>No of books available</th>
+        <th>SL. NO</th>
+        <th>State</th>
+        <th>Number of district</th>
+        <th>Number of blocks</th>
+        <th>Route KM</th>
+        <th>cost of award</th>
+        <th>No of GP in WO</th>
+        <th>incremental length</th>
+        <th>Ofcat</th>
+        
       </tr>
     </thead>
     
     <tbody>
     
-      <tr dir-Paginate = "book in libraryBooks | filter:keyword|itemsPerPage:5">
+      <tr dir-Paginate = "book in libraryBooks | filter:keyword|itemsPerPage:10">
         <td class= "bg-info">{{book.id}}</td>
-        <td>{{book.name}}</td>
-        <td>{{book.author}}</td>
-        <td>{{book.description}}</td>
-        <td>{{book.count}}</td>
+        <td>{{book.state}}</td>
+        <td>{{book.numberOfDistrict}}</td>
+        <td>{{book.numberOfBlocks}}</td>
+        <td>{{book.numberOfGP}}</td>
+        <td>{{book.routeKm}}</td>
+        <td>{{book.costOfAward}}</td>
+        <td>{{book.numberOfGpInWO}}</td>
+        <td>{{book.incrementalLength}}</td>
+        
         <td><button ng-click = "removeBook(book.id)" ng-show = "admin" class = "btn-danger">remove</button></td>
         <td><button ng-click = "issueBook(book.id)"   class = "btn-success">issue</button></td>
         <td><button ng-click = "returnBook(book.id)" ng-show = "admin"  class = "btn-info">return</button></td>
@@ -45,7 +55,7 @@
 	template-url="dirPagination.tpl.html"></dir-pagination-controls> -->
 	
 	<dir-pagination-controls
-        max-size="6"
+        max-size="20"
         direction-links="true"
         boundary-links="true" >
     </dir-pagination-controls>

@@ -24,7 +24,7 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
 	};
 	
 	$scope.home = function() {
-		 window.location = 'http://localhost:8080/Kilvish/';
+		 window.location = 'http://http://env-6028584.mj.milesweb.cloud/';
 	};
 	
 	$scope.clear = function()
@@ -37,18 +37,24 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
 
 	
 	 $scope.getAllBooks = function() {
-		 $http.get(
-			'http://localhost:8080/Kilvish/Api/BookService/ViewAllBooks/')
-			.success(function(data) {
-				$scope.libraryBooks = JSON.parse(data);
-				
-			});
-
+		 
+		 $http({
+		        method : "GET",
+		        url : "http://env-7518892.mj.milesweb.cloud/Api/BookService/ViewAllBooks/",
+		        headers: {
+		            'Content-Type': 'application/json', /*or whatever type is relevant */
+		            'Accept': 'application/json' /* ditto */
+		        }
+		    }).then(function mySuccess(response) {
+		    	$scope.libraryBooks = JSON.parse(response.data);
+		    }, function myError(response) {
+		       
+		    });
     };	
     
     $scope.removeBook = function(bid) {
 		 $http.get(
-			'http://localhost:8080/Kilvish/Api/BookService/RemoveBook/'+ bid)
+			'http://localhost:8080/Api/BookService/RemoveBook/'+ bid)
 			.success(function(data) {
 				
 				$scope.getAllBooks();
@@ -59,7 +65,7 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
    
    $scope.issueBook = function(bid) {
 		 $http.get(
-			'http://localhost:8080/Kilvish/Api/BookService/IssueBook/'+ bid)
+			'http://localhost:8080/LibraryManagementSystem/Api/BookService/IssueBook/'+ bid)
 			.success(function(data) {
 				
 				$scope.bookCount = data;
@@ -82,7 +88,7 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
  
  $scope.returnBook = function(bid) {
 	 $http.get(
-		'http://localhost:8080/Kilvish/Api/BookService/ReturnBook/'+ bid)
+		'http://localhost:8080/LibraryManagementSystem/Api/BookService/ReturnBook/'+ bid)
 		.success(function(data) {
 			
 			$scope.getAllBooks();
@@ -94,7 +100,7 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
    
    $scope.Login = function(username,password) {
 		 $http.get(
-			'http://localhost:8080/Kilvish/Api/BookService/Login/'+username + '/' +password)
+			'http://http://env-2654636.mj.milesweb.cloud/LibraryManagementSystem/Api/BookService/Login/'+username + '/' +password)
 			.success(function(data) {
 			    $scope.user = data;
 				$scope.LoginSuccessMessage = "Successfully logged In";
@@ -121,8 +127,9 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
  
  
  $scope.register = function(name,age,profession,username,password) {
+	 alert('inside register function');
 	 $http.get(
-		'http://localhost:8080/Kilvish/Api/BookService/Register/'+ name + '/' + age  + '/' + profession+ '/' + username + '/' + password)
+		'http://http://env-2654636.mj.milesweb.cloud/http://env-2654636.mj.milesweb.cloud/http://env-2654636.mj.milesweb.cloud/LibraryManagementSystem/Api/BookService/Register/'+ name + '/' + age  + '/' + profession+ '/' + username + '/' + password)
 		.success(function() {
      $scope.registerSuccess = "successfully registered.....!!!";
 		});
@@ -131,7 +138,7 @@ app.controller("mainController", function($rootScope , $scope, $location, $http)
     
     $scope.addBook = function(bname, bauthor, bcount, bdescription) {
 		 $http.get(
-			'http://localhost:8080/Kilvish/Api/BookService/AddBook/'+ bname + '/' + bauthor + '/' + bcount+ '/' + bdescription)
+			'http://localhost:8080/LibraryManagementSystem/Api/BookService/AddBook/'+ bname + '/' + bauthor + '/' + bcount+ '/' + bdescription)
 			.success(function() {
 				$scope.successMessage = "successfully saved";
 				$scope.clear();

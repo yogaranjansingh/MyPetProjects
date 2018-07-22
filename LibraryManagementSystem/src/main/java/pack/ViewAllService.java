@@ -1,18 +1,32 @@
 package pack;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.security.GeneralSecurityException;
+import java.security.Permission;
+import java.security.PermissionCollection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.crypto.Cipher;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
-
 import javax.ws.rs.PathParam;
 
+import org.apache.poi.poifs.crypt.Decryptor;
+import org.apache.poi.poifs.crypt.EncryptionInfo;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,9 +40,12 @@ public class ViewAllService extends ConnectionManager{
 	
 	Boolean login;
 	String userwa;
+	
+	static  {
+		removeCryptographyRestrictions();
+	}
 
-	@GET
-	@Path("/ViewAllBooks")
+	/*@Path("/ViewAllBooks")
 	public String viewAllBooks() 
 	{
 		
@@ -55,8 +72,74 @@ public class ViewAllService extends ConnectionManager{
 
 		return json;
 
+	}*/
+	
+	@GET
+	@Path("/ViewAllBooks")
+	public String viewAllBooks() throws IOException, GeneralSecurityException 
+	{
+		List<Summary> list = getAllSummaryObjects();
+		System.out.println("Total Number Of Records : "+list.size());
+		Iterator itr = list.iterator();
+ 
+		String json = new Gson().toJson(list);
+
+		return json;
+
 	}
 	
+	
+	private List getAllSummaryObjects() throws IOException, GeneralSecurityException {
+		System.out.println(Cipher.getMaxAllowedKeyLength("AES"));
+		try {
+			Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+			field.setAccessible(true);
+			field.set(null, java.lang.Boolean.FALSE);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("sample.xlsx").getFile());
+		//File file = new File("./sample.xlsx");
+		NPOIFSFileSystem fileSystem = new NPOIFSFileSystem(file, true);
+		EncryptionInfo info = new EncryptionInfo(fileSystem);
+		Decryptor decryptor = Decryptor.getInstance(info);
+		if (!decryptor.verifyPassword("deepikarajiv")) {
+			throw new RuntimeException("Unable to process: document is encrypted.");
+		}
+		InputStream dataStream = decryptor.getDataStream(fileSystem);
+		Workbook workbook = new XSSFWorkbook(dataStream);
+		dataStream.close();
+		Sheet summarySheet = workbook.getSheet("New Summary");
+		DataFormatter dataFormatter = new DataFormatter();
+		
+		List<Summary> list = new ArrayList<Summary>();
+		int skip=4;
+		for (Row row : summarySheet) {
+			if(skip>=0)
+			{
+				skip--;
+				continue;
+			}
+			Summary summary = new Summary();
+			if(dataFormatter.formatCellValue(row.getCell(1)).equals("Grand Total") )
+				break;
+			summary.setId(dataFormatter.formatCellValue(row.getCell(0,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setState(dataFormatter.formatCellValue(row.getCell(1,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setNumberOfDistrict((dataFormatter.formatCellValue(row.getCell(2,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK))));
+			summary.setNumberOfBlocks(dataFormatter.formatCellValue(row.getCell(3,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setNumberOfGP(dataFormatter.formatCellValue(row.getCell(4,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setRouteKm(dataFormatter.formatCellValue(row.getCell(5,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setCostOfAward(dataFormatter.formatCellValue(row.getCell(6,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setNumberOfGpInWO(dataFormatter.formatCellValue(row.getCell(7,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			summary.setIncrementalLength(dataFormatter.formatCellValue(row.getCell(8,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)));
+			list.add(summary);
+		}
+		workbook.close();
+		return list;
+	}
+
+
 	@GET
 	@Path("/AddBook/{bname}/{bauthor}/{bcount}/{bdescription}")
 	public void AddBook(@PathParam("bname") String bname, @PathParam("bauthor") String bauthor ,@PathParam("bcount") int bcount , @PathParam("bdescription") String bdescription) 
@@ -230,4 +313,52 @@ public class ViewAllService extends ConnectionManager{
 
 	}
 
+	private static void removeCryptographyRestrictions() {
+		if (!isRestrictedCryptography()) {
+			System.out.println(("Cryptography restrictions removal not needed"));
+			return;
+		}
+		try {
+			/*
+			 * Do the following, but with reflection to bypass access checks:
+			 *
+			 * JceSecurity.isRestricted = false; JceSecurity.defaultPolicy.perms.clear();
+			 * JceSecurity.defaultPolicy.add(CryptoAllPermission.INSTANCE);
+			 */
+			final Class<?> jceSecurity = Class.forName("javax.crypto.JceSecurity");
+			final Class<?> cryptoPermissions = Class.forName("javax.crypto.CryptoPermissions");
+			final Class<?> cryptoAllPermission = Class.forName("javax.crypto.CryptoAllPermission");
+
+			final Field isRestrictedField = jceSecurity.getDeclaredField("isRestricted");
+			isRestrictedField.setAccessible(true);
+			final Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(isRestrictedField, isRestrictedField.getModifiers() & ~Modifier.FINAL);
+			isRestrictedField.set(null, false);
+
+			final Field defaultPolicyField = jceSecurity.getDeclaredField("defaultPolicy");
+			defaultPolicyField.setAccessible(true);
+			final PermissionCollection defaultPolicy = (PermissionCollection) defaultPolicyField.get(null);
+
+			final Field perms = cryptoPermissions.getDeclaredField("perms");
+			perms.setAccessible(true);
+			((Map<?, ?>) perms.get(defaultPolicy)).clear();
+
+			final Field instance = cryptoAllPermission.getDeclaredField("INSTANCE");
+			instance.setAccessible(true);
+			defaultPolicy.add((Permission) instance.get(null));
+
+		} catch (final Exception e) {
+			System.out.println(( "Failed to remove cryptography restrictions" +e));
+		}
+	}
+
+	private static boolean isRestrictedCryptography() {
+		// This matches Oracle Java 7 and 8, but not Java 9 or OpenJDK.
+		final String name = System.getProperty("java.runtime.name");
+		final String ver = System.getProperty("java.version");
+		return name != null && name.equals("Java(TM) SE Runtime Environment") && ver != null
+				&& (ver.startsWith("1.7") || ver.startsWith("1.8"));
+	}
+	
 }

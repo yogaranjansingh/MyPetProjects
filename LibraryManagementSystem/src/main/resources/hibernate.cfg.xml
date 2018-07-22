@@ -23,7 +23,7 @@
       root
    </property>
    <property name="hibernate.connection.password">
-      yoga
+      root
    </property>
 
    <!-- List of XML mapping files -->

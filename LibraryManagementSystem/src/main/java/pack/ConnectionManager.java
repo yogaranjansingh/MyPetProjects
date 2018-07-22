@@ -16,7 +16,7 @@ public class ConnectionManager {
 			ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		this.con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/cybage", "root", "yoga");
+				"jdbc:mysql://https://node16209-env-7366782.mj.milesweb.cloud:3306/cybage", "root", "GXMhco73326");
 	}
 
 	public Connection getConnection() {
